@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "source": "CMDB Export Simulation",
+    "exported_at": "2024-01-15T00:00:00Z",
+    "total_assets": 8,
+    "note": "Application-level inventory only. Library-level data would require EDR/vulnerability scanner."
+  },
+  "assets": [
+    {
+      "hostname": "web-server-01",
+      "ip": "10.0.0.5",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["nginx-1.24", "tomcat-9.0", "java-11-openjdk"],
+      "criticality": "high",
+      "owner": "web-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "app-server-02",
+      "ip": "10.0.0.8",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["elasticsearch-7.17", "java-11-openjdk", "kibana-7.17"],
+      "criticality": "critical",
+      "owner": "data-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "jenkins-01",
+      "ip": "10.0.0.15",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["jenkins-2.426", "java-17-openjdk", "docker-24.0"],
+      "criticality": "high",
+      "owner": "devops-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "db-server-01",
+      "ip": "10.0.0.20",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["postgresql-14.9", "pgbouncer-1.19"],
+      "criticality": "critical",
+      "owner": "dba-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "kafka-01",
+      "ip": "10.0.0.25",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["kafka-3.5", "zookeeper-3.8", "java-11-openjdk"],
+      "criticality": "critical",
+      "owner": "data-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "monitoring-01",
+      "ip": "10.0.0.30",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["prometheus-2.45", "grafana-10.0", "alertmanager-0.26"],
+      "criticality": "medium",
+      "owner": "sre-team",
+      "environment": "production"
+    },
+    {
+      "hostname": "dev-server-01",
+      "ip": "10.0.1.10",
+      "os": "Ubuntu 22.04 LTS",
+      "software": ["nodejs-18", "python-3.11", "docker-24.0"],
+      "criticality": "low",
+      "owner": "dev-team",
+      "environment": "development"
+    },
+    {
+      "hostname": "vpn-gateway-01",
+      "ip": "10.0.0.2",
+      "os": "pfSense 2.7",
+      "software": ["openvpn-2.6", "strongswan-5.9"],
+      "criticality": "critical",
+      "owner": "network-team",
+      "environment": "production"
+    }
+  ]
+}

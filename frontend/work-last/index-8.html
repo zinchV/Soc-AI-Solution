@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC AI Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M12 8v4M12 16h.01"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">SOC AI</span>
+                        <span class="logo-subtitle">Command Center</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="alerts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>Alerts</span>
+                    <span class="nav-badge" id="alerts-badge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="incidents">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                    <span>Incidents</span>
+                    <span class="nav-badge critical" id="incidents-badge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="chat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>AI Chat</span>
+                </a>
+                <!-- Threat Center (was Proactive) -->
+                <a href="#" class="nav-item" data-view="threat-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4M12 16h.01"/>
+                    </svg>
+                    <span>Threat Center</span>
+                    <span class="nav-badge" id="threat-center-badge">0</span>
+                </a>
+                <!-- Assets Tab -->
+                <a href="#" class="nav-item" data-view="assets">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <span>Assets</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="connection-status" id="connection-status">
+                    <div class="status-dot"></div>
+                    <span>Connecting...</span>
+                </div>
+                <div class="api-status" id="api-status">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                    </svg>
+                    <span>Gemini: Checking...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Real-time security operations overview</p>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn btn-outline" id="refresh-btn" title="Refresh Data">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-outline" id="reset-btn" title="Reset Demo Data">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-primary" id="demo-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <span>Load Demo</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View - RESTORED FROM ORIGINAL -->
+            <section class="view active" id="dashboard-view">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon alerts-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-alerts">0</span>
+                            <span class="stat-label">Total Alerts</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon incidents-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-incidents">0</span>
+                            <span class="stat-label">Active Incidents</span>
+                        </div>
+                        <div class="stat-trend down">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon time-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value"><span id="stat-time">0</span>h</span>
+                            <span class="stat-label">Time Saved</span>
+                        </div>
+                        <div class="stat-badge">
+                            <span id="stat-reduction">0</span>% faster
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon actions-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 11 12 14 22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="stat-actions">0</span>
+                            <span class="stat-label">Actions Executed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section - RESTORED FROM ORIGINAL -->
+                <div class="content-grid">
+                    <div class="card upload-card">
+                        <div class="card-header">
+                            <h3>Upload Security Alerts</h3>
+                            <span class="card-badge">CSV Format</span>
+                        </div>
+                        <div class="upload-zone" id="upload-zone">
+                            <div class="upload-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <p class="upload-text">Drop your CSV file here or click to browse</p>
+                            <p class="upload-hint">Expected columns: timestamp, severity, source_ip, destination_ip, user, description, event_type</p>
+                            <input type="file" id="file-input" accept=".csv" hidden>
+                        </div>
+                        <div class="upload-progress" id="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <span class="progress-text" id="progress-text">Processing...</span>
+                        </div>
+                    </div>
+
+                    <div class="card analyze-card">
+                        <div class="card-header">
+                            <h3>AI Analysis</h3>
+                            <span class="card-badge gemini">Powered by Gemini</span>
+                        </div>
+                        <div class="analyze-content">
+                            <p>Use AI to automatically correlate alerts into actionable incidents</p>
+                            <ul class="feature-list">
+                                <li>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Automatic threat correlation
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Attack chain identification
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Recommended response actions
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    ChromaDB semantic search
+                                </li>
+                            </ul>
+                             
+                            <!-- Training Mode Toggle -->
+                            <div class="training-toggle-container">
+                                <label class="training-toggle">
+                                    <input type="checkbox" id="training-mode-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">
+                                    🎓 Training Mode
+                                    <span class="training-tooltip">AI explains its reasoning to help analysts learn</span>
+                                </span>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg" id="analyze-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                                </svg>
+                                <span>Analyze Alerts with AI</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Severity Breakdown - RESTORED FROM ORIGINAL -->
+                <div class="card severity-card">
+                    <div class="card-header">
+                        <h3>Severity Distribution</h3>
+                    </div>
+                    <div class="severity-bars" id="severity-bars">
+                        <div class="severity-row">
+                            <span class="severity-label critical">Critical</span>
+                            <div class="severity-bar-track">
+                                <div class="severity-bar-fill critical" id="sev-critical" style="width: 0%"></div>
+                            </div>
+                            <span class="severity-count" id="sev-critical-count">0</span>
+                        </div>
+                        <div class="severity-row">
+                            <span class="severity-label high">High</span>
+                            <div class="severity-bar-track">
+                                <div class="severity-bar-fill high" id="sev-high" style="width: 0%"></div>
+                            </div>
+                            <span class="severity-count" id="sev-high-count">0</span>
+                        </div>
+                        <div class="severity-row">
+                            <span class="severity-label medium">Medium</span>
+                            <div class="severity-bar-track">
+                                <div class="severity-bar-fill medium" id="sev-medium" style="width: 0%"></div>
+                            </div>
+                            <span class="severity-count" id="sev-medium-count">0</span>
+                        </div>
+                        <div class="severity-row">
+                            <span class="severity-label low">Low</span>
+                            <div class="severity-bar-track">
+                                <div class="severity-bar-fill low" id="sev-low" style="width: 0%"></div>
+                            </div>
+                            <span class="severity-count" id="sev-low-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alerts View -->
+            <section class="view" id="alerts-view">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Security Alerts</h3>
+                        <div class="filter-group">
+                            <select id="severity-filter" class="filter-select">
+                                <option value="">All Severities</option>
+                                <option value="Critical">Critical</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                            <select id="type-filter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="Authentication">Authentication</option>
+                                <option value="Malware">Malware</option>
+                                <option value="Data Exfiltration">Data Exfiltration</option>
+                                <option value="Reconnaissance">Reconnaissance</option>
+                                <option value="Lateral Movement">Lateral Movement</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="alerts-table-container">
+                        <table class="alerts-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Severity</th>
+                                    <th>Type</th>
+                                    <th>Source IP</th>
+                                    <th>User</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alerts-table-body">
+                                <tr class="empty-row">
+                                    <td colspan="6">No alerts loaded. Upload a CSV or load demo data.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Incidents View -->
+            <section class="view" id="incidents-view">
+                <div class="incidents-grid" id="incidents-grid">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <h3>No Incidents Yet</h3>
+                        <p>Upload alerts and run AI analysis to detect security incidents</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat View -->
+            <section class="view" id="chat-view">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-welcome">
+                            <div class="welcome-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                                </svg>
+                            </div>
+                            <h3>AI Security Assistant</h3>
+                            <p>Ask questions about your security data using natural language</p>
+                            <div class="sample-questions">
+                                <button class="sample-btn" data-question="Show me all critical alerts">Critical alerts</button>
+                                <button class="sample-btn" data-question="What are the most common attack types?">Attack types</button>
+                                <button class="sample-btn" data-question="Which IPs show suspicious activity?">Suspicious IPs</button>
+                                <button class="sample-btn" data-question="Summarize the security incidents">Incident summary</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Ask about your security data..." autocomplete="off">
+                        <button class="chat-send-btn" id="chat-send">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Threat Center View (was Proactive) -->
+            <section class="view" id="threat-center-view">
+                <div class="threat-center-header">
+                    <h2>Threat Center</h2>
+                    <p class="subtitle">Threat Intelligence & Proactive Hunting</p>
+                    <button class="btn btn-primary" onclick="refreshThreatCenter()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M23 4v6h-6M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                        Refresh All
+                    </button>
+                </div>
+
+                <div class="threat-center-grid">
+                    <!-- Threat Intelligence Card -->
+                    <div class="card threat-intel-card">
+                        <div class="card-header">
+                            <h3><span class="card-icon">🛡️</span> Threat Intelligence</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline" onclick="fetchKEV()">Fetch KEV</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Exposure Summary Pane (shown after fetch) -->
+                            <div id="exposure-summary-pane" class="exposure-summary-pane" style="display: none;">
+                                <div class="summary-stats-row">
+                                    <div class="summary-stat" id="summary-total">
+                                        <span class="summary-stat-value">0</span>
+                                        <span class="summary-stat-label">Total CVEs</span>
+                                    </div>
+                                    <div class="summary-stat exposed" id="summary-exposed">
+                                        <span class="summary-stat-value">0</span>
+                                        <span class="summary-stat-label">⚠️ Exposed</span>
+                                    </div>
+                                    <div class="summary-stat covered" id="summary-covered">
+                                        <span class="summary-stat-value">0</span>
+                                        <span class="summary-stat-label">🛡️ Covered</span>
+                                    </div>
+                                    <div class="summary-stat action-needed" id="summary-action">
+                                        <span class="summary-stat-value">0</span>
+                                        <span class="summary-stat-label">🔴 Need Action</span>
+                                    </div>
+                                </div>
+                                <!-- Exposed CVE quick list -->
+                                <div id="exposed-cve-list" class="exposed-cve-list"></div>
+                            </div>
+                            
+                            <!-- CVE List -->
+                            <div id="threat-intel-list" class="threat-intel-list">
+                                <p class="empty-state">Click "Fetch KEV" to load CISA Known Exploited Vulnerabilities</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Actions Card -->
+                    <div class="card pending-actions-card">
+                        <div class="card-header">
+                            <h3><span class="card-icon">⏳</span> Pending Actions</h3>
+                            <span class="badge" id="pending-actions-count">0</span>
+                        </div>
+                        <div class="card-body" id="pending-actions-list">
+                            <p class="empty-state">No pending actions</p>
+                        </div>
+                    </div>
+
+                    <!-- Hunt Recommendations Card -->
+                    <div class="card hunt-recommendations-card">
+                        <div class="card-header">
+                            <h3><span class="card-icon">🎯</span> Hunt Recommendations</h3>
+                            <button class="btn btn-sm btn-outline" onclick="generateHunts()">Generate Hunts</button>
+                        </div>
+                        <div class="card-body" id="hunt-recommendations-list">
+                            <p class="empty-state">No hunt recommendations. Click Generate Hunts.</p>
+                        </div>
+                    </div>
+
+                    <!-- Hunt Results Card -->
+                    <div class="card hunt-results-card">
+                        <div class="card-header">
+                            <h3><span class="card-icon">📊</span> Hunt Results</h3>
+                            <span class="badge" id="hunt-results-count">0</span>
+                        </div>
+                        <div class="card-body" id="hunt-results-list">
+                            <p class="empty-state">No hunt results yet</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assets View -->
+            <section class="view" id="assets-view">
+                <div class="assets-header">
+                    <h2>Asset Inventory</h2>
+                    <div class="assets-controls">
+                        <select id="asset-type-filter" class="filter-select" onchange="filterAssets()">
+                            <option value="">All Types</option>
+                            <option value="server">Servers</option>
+                            <option value="workstation">Workstations</option>
+                            <option value="network">Network Devices</option>
+                            <option value="security">Security Appliances</option>
+                        </select>
+                        <select id="asset-criticality-filter" class="filter-select" onchange="filterAssets()">
+                            <option value="">All Criticality</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <input type="text" id="asset-search" class="search-input" placeholder="Search assets..." oninput="filterAssets()">
+                    </div>
+                </div>
+
+                <!-- Asset Stats -->
+                <div class="asset-stats">
+                    <div class="stat-card total">
+                        <span class="stat-value" id="total-assets">0</span>
+                        <span class="stat-label">TOTAL ASSETS</span>
+                    </div>
+                    <div class="stat-card critical">
+                        <span class="stat-value" id="critical-assets">0</span>
+                        <span class="stat-label">CRITICAL</span>
+                    </div>
+                    <div class="stat-card high">
+                        <span class="stat-value" id="high-assets">0</span>
+                        <span class="stat-label">HIGH</span>
+                    </div>
+                    <div class="stat-card medium">
+                        <span class="stat-value" id="medium-assets">0</span>
+                        <span class="stat-label">MEDIUM</span>
+                    </div>
+                </div>
+
+                <!-- Asset Type Pills -->
+                <div class="asset-type-pills">
+                    <button class="type-pill active" data-type="" onclick="filterByType(this, '')">
+                        <span class="pill-icon">📦</span> All: <span id="pill-all-count">0</span>
+                    </button>
+                    <button class="type-pill" data-type="server" onclick="filterByType(this, 'server')">
+                        <span class="pill-icon">🖥️</span> Servers: <span id="pill-server-count">0</span>
+                    </button>
+                    <button class="type-pill" data-type="workstation" onclick="filterByType(this, 'workstation')">
+                        <span class="pill-icon">💻</span> Workstations: <span id="pill-workstation-count">0</span>
+                    </button>
+                    <button class="type-pill" data-type="network" onclick="filterByType(this, 'network')">
+                        <span class="pill-icon">🌐</span> Network: <span id="pill-network-count">0</span>
+                    </button>
+                    <button class="type-pill" data-type="security" onclick="filterByType(this, 'security')">
+                        <span class="pill-icon">🔒</span> Security: <span id="pill-security-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Assets Table -->
+                <div class="card assets-table-card">
+                    <div class="assets-table-container">
+                        <table class="assets-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Criticality</th>
+                                    <th>Type</th>
+                                    <th>Operating System</th>
+                                    <th>Owner</th>
+                                    <th>Software</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assets-table-body">
+                                <tr class="empty-row">
+                                    <td colspan="7">Loading assets...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- CVE Detail Modal -->
+    <div class="modal-overlay" id="cve-modal" style="display: none;">
+        <div class="modal-content cve-detail-modal">
+            <div class="modal-header">
+                <h3 id="cve-modal-title">CVE Details</h3>
+                <button class="modal-close" onclick="closeCVEModal()">×</button>
+            </div>
+            <div class="modal-body" id="cve-modal-body">
+                <!-- CVE details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Rule View Modal -->
+    <div class="modal-overlay" id="rule-modal" style="display: none;">
+        <div class="modal-content rule-detail-modal">
+            <div class="modal-header">
+                <h3 id="rule-modal-title">Detection Rule</h3>
+                <button class="modal-close" onclick="closeRuleModal()">×</button>
+            </div>
+            <div class="modal-body" id="rule-modal-body">
+                <!-- Rule details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Exposed Assets Modal -->
+    <div class="modal-overlay" id="exposed-assets-modal" style="display: none;">
+        <div class="modal-content exposed-assets-modal">
+            <div class="modal-header">
+                <h3 id="exposed-assets-title">Exposed Assets</h3>
+                <button class="modal-close" onclick="closeExposedAssetsModal()">×</button>
+            </div>
+            <div class="modal-body" id="exposed-assets-body">
+                <!-- Exposed assets table will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p id="loading-text">Analyzing alerts with AI...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

